@@ -19,13 +19,58 @@
 #include "XML/xml_style.h"
 
 
+void on_ok_button_clicked(GtkWidget *widget, gpointer data) {
+    GtkWidget *new_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_title(GTK_WINDOW(new_window), "Nouvelle Fenêtre");
+    gtk_window_set_default_size(GTK_WINDOW(new_window), 400, 300);
+
+    GtkWidget *label = gtk_label_new("Bienvenue dans la nouvelle fenêtre !");
+    gtk_container_add(GTK_CONTAINER(new_window), label);
+
+    gtk_widget_show_all(new_window);
+}
+
+void on_quit_button_clicked(GtkWidget *widget, gpointer data) {
+    GApplication *app = G_APPLICATION(data);  // Convertir le `gpointer` en `GApplication`
+    g_application_quit(app);  // 📌 Quitter proprement l'application GtkApplication
+}
+
+
+
+
 
 static void activate(GtkApplication *app, gpointer data)
 {
+    (void)data;
     // let only the project you want to run
     // comment the others
 
     // after choosing the project all you want to do is to run the program
+       
+      
+
+        // Création de la fenêtre principale
+        GtkWidget *window = create_window(app, GTK_WINDOW_TOPLEVEL, "Test des fonctions GTK+", 900, 600, TRUE, GTK_WIN_POS_CENTER, TRUE, NULL, 1, FALSE);
+        
+        // Création d'un conteneur de type fixed
+        GtkWidget *fixed = create_fixed();
+
+      
+    // Solution : Utiliser `GtkEventBox` pour encapsuler `GtkMenuBar`
+    GtkWidget *menu_eventbox = gtk_event_box_new();
+    GtkWidget *menu_bar = create_menu_deroulant(window);
+    gtk_container_add(GTK_CONTAINER(menu_eventbox), menu_bar);
+
+
+        // Création d'un HeaderBar pour centrer le titre
+        GtkWidget *header = create_header_bar("test des fonctions GTK+", "", "assets/home.png", TRUE);
+        add_header_bar_to_window(window, header);
+    
+        GtkWidget *window1 = create_scrolled_window(TRUE, TRUE);
+        add_to_scrolled_window(window1, fixed);
+        add_to_container(window, window1);
+    
+
 
 
     //creation de la widgets de radio button
@@ -61,6 +106,7 @@ static void activate(GtkApplication *app, gpointer data)
       add_to_frame(frame_button_check, grid1, 0, 0, 10, 10);
 
 
+
     //creation de la widgets de radio button
     GtkWidget *radio11 = create_radio_button("Malade", NULL, NULL, FALSE);
     GtkWidget *radio21 = create_radio_button("Suspect", NULL, radio11, FALSE);
@@ -90,28 +136,62 @@ static void activate(GtkApplication *app, gpointer data)
   LDR1->choix = inserer_choix(LDR1->choix, "choix4");
   LDR1->index = 2;
   listeDR(LDR1);
+   
+    //creation de la widgets de switch button
+    // GtkWidget *switch_button = create_switch_button(TRUE, NULL, NULL);
 
-  GtkWidget *fixed = create_fixed();
- 
+    // add_to_fixed(fixed, switch_button, 200, 300); // Position X=20, Y=20
+
+    //creation spin button
+
+    // GtkWidget *spin_button = create_spin_button(0, 100, 1, 50, 0, FALSE, FALSE);
+    // add_to_fixed(fixed, spin_button, 600, 300); // Position X=20, Y=20
     
 
+/*-------widgets des image dans une button et chaque button lorsque est clicke doit affichier une event-----------*/
+    // creation des images pour les boutons
+    GtkWidget *image_ok = gtk_image_new_from_file("assets/ma.png");
+    GtkWidget *image_quitter = gtk_image_new_from_file("assets/home.png");
 
+    //verifier si les images sont bien chargees
+    if (!image_ok) {
+        g_printerr("Error loading image 'assets/ma.png'\n");
+    }
+    if (!image_quitter) {
+        g_printerr("Error loading image 'assets/home.png'\n");
+    }
+
+    // creation des buttons
+    GtkWidget *button = create_button(GTK_RELIEF_NORMAL, "OK", FALSE, NULL,NULL, NULL);
+    GtkWidget *button2 = create_button(GTK_RELIEF_NORMAL, "quitter", FALSE, NULL, NULL, NULL);
+
+    // mettre les images dans les buttons
+    gtk_button_set_image(GTK_BUTTON(button), image_ok);
+    gtk_button_set_image(GTK_BUTTON(button2), image_quitter);
+
+    // afficher les images meme si les buttons sont desactives
+    gtk_button_set_always_show_image(GTK_BUTTON(button), TRUE);
+    gtk_button_set_always_show_image(GTK_BUTTON(button2), TRUE);
+
+    GtkWidget *singal = create_signal();
+    g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(on_ok_button_clicked), NULL);
+    g_signal_connect(G_OBJECT(button2), "clicked", G_CALLBACK(on_quit_button_clicked), app);
+
+    // Add the buttons to the fixed container
+    add_to_fixed(fixed, button, 400, 850); // Position X=400, Y=850
+    add_to_fixed(fixed, button2, 500, 850); // Position X=500, Y=850
+/*----------------------------------------------------------------------------------------------------------------*/
+    // ajouter les widgets au conteneur fixed
+    add_to_fixed(fixed, menu_eventbox, 20, 20); // Position X=20, Y=20
     add_to_fixed(fixed, frame_button_radio, 20, 200);
     add_to_fixed(fixed, frame_button_check, 20, 300);
     add_to_fixed(fixed, macal->calendar, 20, 400);
-    add_to_fixed(fixed, frame_button_radio11, 400, 700);
     add_to_fixed(fixed, LDR1->combobox, 20, 650);
-
-
+    add_to_fixed(fixed, frame_button_radio11, 400, 700);
     
-
-    GtkWidget *window = create_window(app, GTK_WINDOW_TOPLEVEL, "Password", 800, 600, TRUE, GTK_WIN_POS_CENTER, TRUE, NULL, 1.0, FALSE);
-
-    add_to_container(window, fixed);
 
     show_widget(window);
 }
-
 
 
 int main(int argc, char **argv)

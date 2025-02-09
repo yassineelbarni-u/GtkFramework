@@ -36,6 +36,8 @@
 #include "../widgets/radio_button.h"
 #include "../widgets/calendar.h"
 #include "../widgets/combobox.h"
+#include "../widgets/menu_deroulant.h"
+#include "../widgets/signal_widget.h"
 
 
 #endif // WIDGETS_H
