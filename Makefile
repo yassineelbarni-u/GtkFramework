@@ -11,7 +11,7 @@ INCLUDE_DIR = include
 TEST_DIR = DossierForTesting
 
 # Fichiers sources
-SOURCES = $(wildcard $(SRC_DIR)/windows/*.c $(SRC_DIR)/widgets/*.c $(SRC_DIR)/containers/*.c $(TEST_DIR)/test_project_1/*.c $(TEST_DIR)/test_project_2/*.c $(SRC_DIR)/*.c temp.c)
+SOURCES = $(wildcard $(SRC_DIR)/windows/*.c $(SRC_DIR)/widgets/*.c $(SRC_DIR)/containers/*.c $(SRC_DIR)/*.c main.c)
 OBJS = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SOURCES))
 TARGET = $(BIN_DIR)/application.exe
 
