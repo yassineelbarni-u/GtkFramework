@@ -40,6 +40,7 @@
 #include "../widgets/signal_widget.h"
 #include "../widgets/date_selector.h"
 #include "../widgets/event_handlers.h"
+#include "../widgets/background.h"
 
 
 #endif // WIDGETS_H
