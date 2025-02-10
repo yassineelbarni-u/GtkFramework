@@ -38,6 +38,8 @@
 #include "../widgets/combobox.h"
 #include "../widgets/menu_deroulant.h"
 #include "../widgets/signal_widget.h"
+#include "../widgets/date_selector.h"
+#include "../widgets/event_handlers.h"
 
 
 #endif // WIDGETS_H
