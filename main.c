@@ -184,7 +184,16 @@ static void activate(GtkApplication *app, gpointer data)
 
     // GtkWidget *spin_button = create_spin_button(0, 100, 1, 50, 0, FALSE, FALSE);
     // add_to_fixed(fixed, spin_button, 600, 300); // Position X=20, Y=20
+
+    //creation de entry
+    // GtkWidget *entry = create_entry(NULL, "Nom", TRUE, TRUE, 50, 0.5);
+    // add_to_fixed(fixed, entry, 600, 300); // Position X=200, Y=300
+
+    // Add the scale widget
+    GtkWidget *scale = create_scale(GTK_ORIENTATION_HORIZONTAL, 0, 100, 10, 20, GTK_POS_TOP, "50", 0, GTK_POS_LEFT);
+    add_to_fixed(fixed, scale, 700, 300); // Position X=700, Y=300
     
+
 
 /*-------widgets des image dans une button et chaque button lorsque est clicke doit affichier une event-----------*/
     // creation des images pour les boutons
