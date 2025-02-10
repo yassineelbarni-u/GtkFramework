@@ -35,8 +35,46 @@ void on_quit_button_clicked(GtkWidget *widget, gpointer data) {
     g_application_quit(app);  // 📌 Quitter proprement l'application GtkApplication
 }
 
+void show_image_dialog(GtkWidget *parent) {
+    GtkWidget *dialog;
+    dialog = gtk_message_dialog_new(GTK_WINDOW(parent),
+                                    GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                    GTK_MESSAGE_QUESTION,
+                                    GTK_BUTTONS_YES_NO,
+                                    "Voulez-vous afficher une image ?");
+    
+    // Ajouter un bouton "Annuler"
+    gtk_dialog_add_button(GTK_DIALOG(dialog), "Annuler", GTK_RESPONSE_CANCEL);
 
+    // 📌 Déplacer la boîte de dialogue (Position X=300, Y=200)
+    gtk_window_move(GTK_WINDOW(dialog), 700, 500);
 
+    // Afficher la boîte de dialogue et récupérer la réponse de l'utilisateur
+    gint response = gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+
+    // Gérer la réponse de l'utilisateur
+    if (response == GTK_RESPONSE_YES) {
+        g_print("L'utilisateur a cliqué sur Oui\n");
+        
+        // Ouvre une fenêtre avec l'image si nécessaire
+        GtkWidget *image_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+        gtk_window_set_title(GTK_WINDOW(image_window), "Image");
+        gtk_window_set_default_size(GTK_WINDOW(image_window), 400, 300);
+
+        GtkWidget *image = gtk_image_new_from_file("assets/ma.png");
+        gtk_container_add(GTK_CONTAINER(image_window), image);
+
+        // 📌 Déplacer la fenêtre d'image (Position X=400, Y=300)
+        gtk_window_move(GTK_WINDOW(image_window), 400, 300);
+
+        gtk_widget_show_all(image_window);
+    } else if (response == GTK_RESPONSE_NO) {
+        g_print("L'utilisateur a cliqué sur Non\n");
+    } else if (response == GTK_RESPONSE_CANCEL) {
+        g_print("L'utilisateur a annulé\n");
+    }
+}
 
 
 static void activate(GtkApplication *app, gpointer data)
@@ -50,7 +88,7 @@ static void activate(GtkApplication *app, gpointer data)
       
 
         // Création de la fenêtre principale
-        GtkWidget *window = create_window(app, GTK_WINDOW_TOPLEVEL, "Test des fonctions GTK+", 900, 600, TRUE, GTK_WIN_POS_CENTER, TRUE, NULL, 1, FALSE);
+        GtkWidget *window = create_window(app, GTK_WINDOW_TOPLEVEL, "Test des fonctions GTK+", 900, 950, TRUE, GTK_WIN_POS_CENTER, TRUE, NULL, 1, FALSE);
         
         // Création d'un conteneur de type fixed
         GtkWidget *fixed = create_fixed();
@@ -176,6 +214,9 @@ static void activate(GtkApplication *app, gpointer data)
     GtkWidget *singal = create_signal();
     g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(on_ok_button_clicked), NULL);
     g_signal_connect(G_OBJECT(button2), "clicked", G_CALLBACK(on_quit_button_clicked), app);
+    
+
+
 
     // Add the buttons to the fixed container
     add_to_fixed(fixed, button, 400, 850); // Position X=400, Y=850
@@ -191,6 +232,8 @@ static void activate(GtkApplication *app, gpointer data)
     
 
     show_widget(window);
+    
+    g_idle_add((GSourceFunc)show_image_dialog, window);
 }
 
 
